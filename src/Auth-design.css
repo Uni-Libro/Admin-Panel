@@ -1,5 +1,5 @@
 .Auth-form-container {
-  background: linear-gradient(-45deg, #c5c5c5, #7b7a7a, #525252, #303030);
+  background: linear-gradient(-45deg, #496b73, #274046, #1d3035);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
 
@@ -16,7 +16,7 @@
   padding-top: 30px;
   padding-bottom: 20px;
   border-radius: 15px;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(2, 23, 20);
 }
 
 .Auth-form-content {
@@ -51,7 +51,7 @@ label {
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
-  color: rgb(0, 0, 0);
+  color: rgb(2, 23, 20);
   font-weight: 550;
   border-radius: 10px;
   display: block;
@@ -64,21 +64,23 @@ label {
 }
 
 .form-control {
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(2, 23, 20);
   border: none;
   border-bottom: 1px solid rgb(181, 181, 181);
   color: rgb(181, 181, 181);
+  border-radius: 0;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 1.5em;
 }
 
 .form-control:focus {
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(2, 23, 20);
   border: none;
   border-bottom: 2px solid rgb(181, 181, 181);
   color: rgb(181, 181, 181);
   font-size: 14px;
+  border-radius: 0;
   font-weight: 650;
   margin-bottom: 1.5em;
   box-shadow: none;

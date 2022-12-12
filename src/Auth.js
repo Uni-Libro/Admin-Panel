@@ -1,4 +1,5 @@
 import React from "react"
+import "./Auth-design.css"
 
 export default function (props) {
   return (
@@ -23,7 +24,7 @@ export default function (props) {
             />
           </div>
           <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn-grad">
+            <button type="submit" className="btn-grad" >
               Submit
             </button>
           </div>

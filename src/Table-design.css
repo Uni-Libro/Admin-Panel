@@ -1,24 +1,20 @@
-.Table {
-  width: 100%;
-  height: 100vh;
+.paper {
+  margin: auto;
+  margin-top: 7%;
+}
+
+.table-container {
+  background-color: #83959a;
+}
+
+.content {
+  background: linear-gradient(-45deg, #496b73, #274046, #1d3035);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: wheat;
-}
-
-table {
-  border: 2px solid forestgreen;
-  width: 800px;
-  height: 200px;
-}
-
-td {
-  border: 1px solid black;
-  text-align: center;
-}
-
-th {
-  border: 1px solid black;
-  text-align: center;
+  width: 100vw;
+  height: 100vh;
 }

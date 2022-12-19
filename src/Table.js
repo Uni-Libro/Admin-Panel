@@ -27,21 +27,21 @@ function createData(id, name, description) {
 }
 
 const rows = [
-  createData('India', 'IN', 1324171354,),
-  createData('China', 'CN', 1403500365,),
-  createData('Italy', 'IT', 60483973,),
-  createData('United States', 'US', 327167434,),
-  createData('Canada', 'CA', 37602103,),
-  createData('Australia', 'AU', 25475400,),
-  createData('Germany', 'DE', 83019200,),
-  createData('Ireland', 'IE', 4857000,),
-  createData('Mexico', 'MX', 126577691,),
-  createData('Japan', 'JP', 126317000,),
-  createData('France', 'FR', 67022000,),
-  createData('United Kingdom', 'GB', 67545757,),
-  createData('Russia', 'RU', 146793744,),
-  createData('Nigeria', 'NG', 200962417,),
-  createData('Brazil', 'BR', 210147125,),
+  createData(1, 'Penguin Random House', 'Printing your dreams',),
+  createData(2, 'HarperCollins', 'You write, we publish',),
+  createData(3, 'Simon & Schuster', 'Presenting your thoughts to the world',),
+  createData(4, 'Hachette Book Group', 'Quality printing',),
+  createData(5, 'Macmillan', 'Get your dreams inked',),
+  createData(6, 'Scholastic', 'Fast and reliable',),
+  createData(7, 'Disney Publishing Worldwide', 'Experts in the field',),
+  createData(8, 'Houghton Mifflin Harcourt', 'One-stop for printing solutions',),
+  createData(9, '	Workman', 'To make sales easier',),
+  createData(10, 'Sterling', 'Printing your needs',),
+  createData(11, 'John Wiley and Sons', 'Publishing better',),
+  createData(12, 'Abrams', 'Motivating Community',),
+  createData(13, 'Dover', 'A new Words for all',),
+  createData(14, 'Candlewick', 'Printing is our Language',),
+  createData(15, 'W.W. Norton', 'Writing for your Success',),
 ];
 
 export default function StickyHeadTable() {
@@ -122,8 +122,15 @@ export default function StickyHeadTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <AlertDialog open={activeDialog === 'alert'} handleClose={() => setActiveDialog(false)} />
-      <FormDialog open={activeDialog === 'form'} handleClose={() => setActiveDialog(false)} />
+      <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
+        setActiveDialog(false);
+        alert('It is being developed');
+      }
+      } />
+      <FormDialog open={activeDialog === 'form'} handleClose={() => {
+        setActiveDialog(false);
+        alert('It is being developed');
+      }} />
     </div>
   );
 }

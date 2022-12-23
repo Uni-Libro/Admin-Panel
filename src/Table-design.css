@@ -1,20 +1,12 @@
-.paper {
-  margin: auto;
-  margin-top: 7%;
-}
-
-.table-container {
-  background-color: #83959a;
-}
-
-.content {
+/* .content {
   background: linear-gradient(-45deg, #496b73, #274046, #1d3035);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
-
+  width: 100vw;
+  height: 100vh;
+} */
+.table {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
 }

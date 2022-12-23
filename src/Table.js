@@ -10,7 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button } from '@mui/material';
 import { AlertDialog, FormDialog } from './hooks/Dialog';
-
+import ResponsiveAppBar from './NavBar';
+import LabelBottomNavigation from './BottomNavigation';
 const columns = [
   { id: 'id', label: 'Request Id', minWidth: 100, align: 'center' },
   { id: 'name', label: 'Request Name', minWidth: 100, align: 'center' },
@@ -59,78 +60,83 @@ export default function StickyHeadTable() {
   };
 
   return (
+
     <div className='content'>
-      <Paper sx={{ width: '70%', overflow: 'hidden' }} className='paper'>
-        <TableContainer sx={{ maxHeight: 440 }} className='table-container'>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-                <TableCell align='center'
-                  style={{ minWidth: 100 }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number'
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
-                      <TableCell align='center'>
-                        <Button variant="contained" style={{ marginRight: 4 }} color="success" onClick={() => {
-                          setActiveDialog('alert');
-                        }}>
-                          Accept
-                        </Button>
-                        <Button variant="contained" style={{ marginLeft: 4 }} color="error" onClick={() => {
-                          setActiveDialog('form');
-                        }}>
-                          Reject
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[50]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
-        setActiveDialog(false);
-        alert('It is being developed');
-      }
-      } />
-      <FormDialog open={activeDialog === 'form'} handleClose={() => {
-        setActiveDialog(false);
-        alert('It is being developed');
-      }} />
+      <ResponsiveAppBar />
+      <div className='table'>
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer sx={{ maxHeight: 500 }} className='table-container'>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                  <TableCell align='center'
+                    style={{ minWidth: 100 }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                        {columns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === 'number'
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          );
+                        })}
+                        <TableCell align='center'>
+                          <Button variant="contained" style={{ marginRight: 4 }} color="success" onClick={() => {
+                            setActiveDialog('alert');
+                          }}>
+                            Accept
+                          </Button>
+                          <Button variant="contained" style={{ marginLeft: 4 }} color="error" onClick={() => {
+                            setActiveDialog('form');
+                          }}>
+                            Reject
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[50]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
+          setActiveDialog(false);
+          alert('It is being developed');
+        }
+        } />
+        <FormDialog open={activeDialog === 'form'} handleClose={() => {
+          setActiveDialog(false);
+          alert('It is being developed');
+        }} />
+      </div>
+      <LabelBottomNavigation />
     </div>
   );
 }

@@ -3,7 +3,6 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
@@ -11,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from '@mui/material';
 import './nav_bar.css'
 
-const pages = ['Auth', 'Pricing', 'Blog'];
+const pages = ['Users', 'Authers', 'Books', 'Vouchers'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -23,6 +22,14 @@ function ResponsiveAppBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const handleColorofLink = (page) => {
+    if (page === window.location.pathname.slice(1)) {
+      return 'white'
+    } else {
+      return '#a0a0a0'
+    }
+  }
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: 'black' }}>
@@ -59,7 +66,14 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Link
+                    key={page}
+                    href={page}
+                    underline="none"
+                    sx={{ color: 'black', "&:hover": { color: '#ff3c78' } }}
+                  >
+                    {page}
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -69,8 +83,10 @@ function ResponsiveAppBar() {
               <Link
                 key={page}
                 href={page}
-                underline="none"
-                sx={{ my: 2, color: "#a0a0a0", display: 'block', mx: 2 }}
+                underline='none'
+                color={handleColorofLink(page)}
+                sx={{ my: 2, display: 'block', mx: 2 }}
+
                 className="nav-link"
               >
                 {page}

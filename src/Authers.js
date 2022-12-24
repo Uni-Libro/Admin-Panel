@@ -11,7 +11,6 @@ import './Table-design.css'
 import { Button } from '@mui/material';
 import { AlertDialog, FormDialog } from './hooks/Dialog';
 import ResponsiveAppBar from './NavBar';
-import LabelBottomNavigation from './BottomNavigation';
 const columns = [
   { id: 'id', label: 'Request Id', minWidth: 100, align: 'center' },
   { id: 'name', label: 'Request Name', minWidth: 100, align: 'center' },
@@ -136,7 +135,6 @@ export default function StickyHeadTable() {
           alert('It is being developed');
         }} />
       </div>
-      <LabelBottomNavigation />
     </div>
   );
 }

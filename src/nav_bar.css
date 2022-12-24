@@ -25,3 +25,7 @@
 .nav-link:hover:after {
   width: 100%;
 }
+
+.menu-item:hover {
+  color: #ff3c78;
+}

@@ -1,43 +1,44 @@
 import * as React from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import FolderIcon from '@mui/icons-material/Folder';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import "./bottom_navigation.css"
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import './bottom_navigation.css'
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function LabelBottomNavigation() {
-  const [value, setValue] = React.useState('recents');
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+export default function SimpleBottomNavigation() {
+  const [value, setValue] = React.useState(0);
 
   return (
     <div className='bottom'>
-      <BottomNavigation sx={{ width: '70%', maxHeight: 250, background: 'black', borderRadius: 6 }} value={value} onChange={handleChange}>
-        <BottomNavigationAction
-          label="Recents"
-          value="recents"
-          sx={{ color: 'white' }}
-          icon={<RestoreIcon />}
+      <BottomNavigation
+        showLabels
+        value={value}
+        sx={{ width: "50%", backgroundColor: "black", borderRadius: 30 }}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+      >
+        <BottomNavigationAction label="Add" icon={<AddIcon />} sx={{
+          "&.Mui-selected, .Mui-selected > svg": {
+            color: "#ff3c78"
+          },
+          color: "white"
+        }} />
+        <BottomNavigationAction label="Delete" icon={<DeleteIcon />} sx={{
+          "&.Mui-selected, .Mui-selected > svg": {
+            color: "#ff3c78"
+          },
+          color: "white"
+        }}
         />
-        <BottomNavigationAction
-          label="Favorites"
-          value="favorites"
-          sx={{ color: 'white' }}
-          icon={<FavoriteIcon />}
-        />
-        <BottomNavigationAction
-          label="Nearby"
-          value="nearby"
-          sx={{ color: 'white' }}
-          icon={<LocationOnIcon />}
-        />
-        <BottomNavigationAction label="Folder" value="folder" sx={{ color: 'white' }} icon={<FolderIcon />} />
+        <BottomNavigationAction label="Edit" icon={<EditIcon />} sx={{
+          "&.Mui-selected, .Mui-selected > svg": {
+            color: "#ff3c78"
+          },
+          color: "white"
+        }} />
       </BottomNavigation>
     </div>
-
   );
 }

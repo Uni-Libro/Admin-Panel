@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import './bottom_navigation.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 
+
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
 

@@ -9,45 +9,47 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button } from '@mui/material';
-import { AlertDialog, FormDialog } from './hooks/Dialog';
 import ResponsiveAppBar from './NavBar';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 const columns = [
-  { id: 'id', label: 'Request Id', minWidth: 100, align: 'center' },
-  { id: 'name', label: 'Request Name', minWidth: 100, align: 'center' },
-  {
-    id: 'description',
-    label: 'Description',
-    minWidth: 100,
-    align: 'center',
-  },
+  { id: 'name', label: 'Username', minWidth: 100, align: 'center' },
+  { id: 'date', label: 'Join date', minWidth: 100, align: 'center' },
 ];
 
-function createData(id, name, description) {
-  return { id, name, description };
+function createData(name, date) {
+  return { name, date };
 }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const rows = [
-  createData(1, 'Penguin Random House', 'Printing your dreams',),
-  createData(2, 'HarperCollins', 'You write, we publish',),
-  createData(3, 'Simon & Schuster', 'Presenting your thoughts to the world',),
-  createData(4, 'Hachette Book Group', 'Quality printing',),
-  createData(5, 'Macmillan', 'Get your dreams inked',),
-  createData(6, 'Scholastic', 'Fast and reliable',),
-  createData(7, 'Disney Publishing Worldwide', 'Experts in the field',),
-  createData(8, 'Houghton Mifflin Harcourt', 'One-stop for printing solutions',),
-  createData(9, '	Workman', 'To make sales easier',),
-  createData(10, 'Sterling', 'Printing your needs',),
-  createData(11, 'John Wiley and Sons', 'Publishing better',),
-  createData(12, 'Abrams', 'Motivating Community',),
-  createData(13, 'Dover', 'A new Words for all',),
-  createData(14, 'Candlewick', 'Printing is our Language',),
-  createData(15, 'W.W. Norton', 'Writing for your Success',),
+  createData(1, 'Penguin Random House',),
+  createData(2, 'HarperCollins',),
+  createData(3, 'Simon & Schuster',),
+  createData(4, 'Hachette Book Group',),
+  createData(5, 'Macmillan',),
+  createData(6, 'Scholastic',),
+  createData(7, 'Disney Publishing Worldwide',),
+  createData(8, 'Houghton Mifflin Harcourt',),
+  createData(9, '	Workman',),
+  createData(10, 'Sterling',),
+  createData(11, 'John Wiley and Sons',),
+  createData(12, 'Abrams',),
+  createData(13, 'Dover',),
+  createData(14, 'Candlewick',),
+  createData(15, 'W.W. Norton',),
 ];
+
+
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
-  const [activeDialog, setActiveDialog] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  const [open, setOpen] = React.useState(false);
+  // const matches = useMediaQuery('(min-width:600px)');
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -56,6 +58,21 @@ export default function StickyHeadTable() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleClick = (row) => {
+    setOpen(true);
+    rows.filter((item) => item !== row);
+    //delete a row from the table
+
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
@@ -72,13 +89,13 @@ export default function StickyHeadTable() {
                     <TableCell
                       key={column.id}
                       align={column.align}
-                      style={{ minWidth: column.minWidth }}
+                      style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
                     >
                       {column.label}
                     </TableCell>
                   ))}
                   <TableCell align='center'
-                    style={{ minWidth: 100 }}>Actions</TableCell>
+                    style={{ minWidth: 100, fontWeight: 'bold' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -98,16 +115,17 @@ export default function StickyHeadTable() {
                           );
                         })}
                         <TableCell align='center'>
-                          <Button variant="contained" style={{ marginRight: 4 }} color="success" onClick={() => {
-                            setActiveDialog('alert');
+                          <Button variant="contained" color="error" onClick={(row) => {
+                            //asinc function
+                            handleClick(row);
                           }}>
-                            Accept
+                            Delete
                           </Button>
-                          <Button variant="contained" style={{ marginLeft: 4 }} color="error" onClick={() => {
-                            setActiveDialog('form');
-                          }}>
-                            Reject
-                          </Button>
+                          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                            <Alert onClose={handleClose} severity="success" sx={{ width: '100%', boxShadow: 'none' }}>
+                              Successfully deleted!
+                            </Alert>
+                          </Snackbar>
                         </TableCell>
                       </TableRow>
                     );
@@ -125,7 +143,7 @@ export default function StickyHeadTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
+        {/* <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
           setActiveDialog(false);
           alert('It is being developed');
         }
@@ -133,8 +151,8 @@ export default function StickyHeadTable() {
         <FormDialog open={activeDialog === 'form'} handleClose={() => {
           setActiveDialog(false);
           alert('It is being developed');
-        }} />
+        }} /> */}
       </div>
-    </div>
+    </div >
   );
 }

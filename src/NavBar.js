@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from '@mui/material';
 import './nav_bar.css'
 
-const pages = ['Users', 'Authers', 'Books', 'Vouchers'];
+const pages = ['Users', 'Authors', 'Books', 'Vouchers'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);

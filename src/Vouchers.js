@@ -8,46 +8,72 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
-import { Button } from '@mui/material';
-import { AlertDialog, FormDialog } from './hooks/Dialog';
+import { Button, useMediaQuery } from '@mui/material';
+import { FormDialog } from './hooks/VouchersDialog';
 import ResponsiveAppBar from './NavBar';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import AddIcon from '@mui/icons-material/Add';
 const columns = [
-  { id: 'id', label: 'Request Id', minWidth: 100, align: 'center' },
-  { id: 'name', label: 'Request Name', minWidth: 100, align: 'center' },
+  { id: 'id', label: 'ID', minWidth: 100, align: 'center' },
   {
-    id: 'description',
-    label: 'Description',
+    id: 'code',
+    label: 'Code',
+    minWidth: 100,
+    align: 'center',
+  },
+  {
+    id: 'aDate',
+    label: 'Activation date',
+    minWidth: 100,
+    align: 'center',
+  },
+  {
+    id: 'eDate',
+    label: 'Expiration date',
+    minWidth: 100,
+    align: 'center',
+  },
+  {
+    id: 'percentage',
+    label: 'Discount percentage',
     minWidth: 100,
     align: 'center',
   },
 ];
 
-function createData(id, name, description) {
-  return { id, name, description };
+function createData(id, code, aDate, eDate, percentage) {
+  return { id, code, aDate, eDate, percentage };
 }
 
 const rows = [
-  createData(1, 'Penguin Random House', 'Printing your dreams',),
-  createData(2, 'HarperCollins', 'You write, we publish',),
-  createData(3, 'Simon & Schuster', 'Presenting your thoughts to the world',),
-  createData(4, 'Hachette Book Group', 'Quality printing',),
-  createData(5, 'Macmillan', 'Get your dreams inked',),
-  createData(6, 'Scholastic', 'Fast and reliable',),
-  createData(7, 'Disney Publishing Worldwide', 'Experts in the field',),
-  createData(8, 'Houghton Mifflin Harcourt', 'One-stop for printing solutions',),
-  createData(9, '	Workman', 'To make sales easier',),
-  createData(10, 'Sterling', 'Printing your needs',),
-  createData(11, 'John Wiley and Sons', 'Publishing better',),
-  createData(12, 'Abrams', 'Motivating Community',),
-  createData(13, 'Dover', 'A new Words for all',),
-  createData(14, 'Candlewick', 'Printing is our Language',),
-  createData(15, 'W.W. Norton', 'Writing for your Success',),
+  createData(1, 'Penguin Random House', 1, 3, 4),
+  createData(2, 'HarperCollins', 1, 6, 4),
+  createData(3, 'Simon & Schuster', 4, 6, 7),
+  createData(4, 'Hachette Book Group', 4, 7, 8),
+  createData(5, 'Macmillan', 6, 8, 0),
+  createData(6, 'Scholastic', 4, 6, 8),
+  createData(7, 'Disney Publishing Worldwide', 3, 5, 7),
+  createData(8, 'Houghton Mifflin Harcourt', 2, 6, 8),
+  createData(9, '	Workman', 4, 8, 9),
+  createData(10, 'Sterling', 5, 7, 9),
+  createData(11, 'John Wiley and Sons', 5, 8, 4),
+  createData(12, 'Abrams', 4, 7, 3),
+  createData(13, 'Dover', 3, 7, 4),
+  createData(14, 'Candlewick', 76, 8, 4),
+  createData(15, 'W.W. Norton', 54, 8, 6),
 ];
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [activeDialog, setActiveDialog] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  const [open, setOpen] = React.useState(false);
+  const matches = useMediaQuery('(min-width:520px)');
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -56,6 +82,21 @@ export default function StickyHeadTable() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleClick = (row) => {
+    setOpen(true);
+    rows.filter((item) => item !== row);
+    //delete a row from the table
+
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
@@ -72,13 +113,13 @@ export default function StickyHeadTable() {
                     <TableCell
                       key={column.id}
                       align={column.align}
-                      style={{ minWidth: column.minWidth }}
+                      style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
                     >
                       {column.label}
                     </TableCell>
                   ))}
                   <TableCell align='center'
-                    style={{ minWidth: 100 }}>Actions</TableCell>
+                    style={{ minWidth: 100, fontWeight: 'bold' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -98,15 +139,21 @@ export default function StickyHeadTable() {
                           );
                         })}
                         <TableCell align='center'>
-                          <Button variant="contained" style={{ marginRight: 4 }} color="success" onClick={() => {
-                            setActiveDialog('alert');
+                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={(row) => {
+                            //asinc function
+                            handleClick(row);
                           }}>
-                            Accept
+                            Delete
                           </Button>
-                          <Button variant="contained" style={{ marginLeft: 4 }} color="error" onClick={() => {
+                          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                            <Alert onClose={handleClose} severity="success" sx={{ width: '100%', boxShadow: 'none' }}>
+                              Successfully deleted!
+                            </Alert>
+                          </Snackbar>
+                          <Button variant="outlined" sx={{ marginLeft: matches ? 1 : 0, backgroundColor: '--bs-blue', marginTop: matches ? 0 : 1 }} onClick={() => {
                             setActiveDialog('form');
                           }}>
-                            Reject
+                            Edit
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -125,16 +172,14 @@ export default function StickyHeadTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
-          setActiveDialog(false);
-          alert('It is being developed');
-        }
-        } />
         <FormDialog open={activeDialog === 'form'} handleClose={() => {
           setActiveDialog(false);
-          alert('It is being developed');
         }} />
       </div>
+      <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
+        setActiveDialog('form');
+      }}>Add
+      </Button>
     </div>
   );
 }

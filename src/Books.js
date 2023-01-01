@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, Chip, useMediaQuery } from '@mui/material';
 import { FormDialog } from './hooks/BooksDialog';
 import ResponsiveAppBar from './NavBar';
 import AddIcon from '@mui/icons-material/Add';
@@ -126,13 +126,21 @@ export default function StickyHeadTable() {
                       <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                         {columns.map((column) => {
                           const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          );
+                          if (column.id === 'authors') {
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                <Chip label={value} />
+                              </TableCell>
+                            )
+                          } else {
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === 'number'
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            );
+                          }
                         })}
                         <TableCell align='center'>
                           <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={(row) => {

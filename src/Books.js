@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button, Chip, useMediaQuery } from '@mui/material';
-import { FormDialog } from './hooks/BooksDialog';
+import { CollectionCreateForm } from './hooks/BooksDialog';
 import ResponsiveAppBar from './NavBar';
 import AddIcon from '@mui/icons-material/Add';
 import Snackbar from '@mui/material/Snackbar';
@@ -43,21 +43,21 @@ function createData(name, authors, categories, picture, pdf) {
 }
 
 const rows = [
-  createData(1, 'Penguin Random House', 'Printing your dreams', 4, 4,),
-  createData(2, 'HarperCollins', 'You write, we publish', 5, 5,),
-  createData(3, 'Simon & Schuster', 'Presenting your thoughts to the world', 6, 5,),
-  createData(4, 'Hachette Book Group', 'Quality printing', 7, 5,),
-  createData(5, 'Macmillan', 'Get your dreams inked', 8, 5,),
-  createData(6, 'Scholastic', 'Fast and reliable', 9, 5,),
-  createData(7, 'Disney Publishing Worldwide', 'Experts in the field', 10, 5,),
-  createData(8, 'Houghton Mifflin Harcourt', 'One-stop for printing solutions', 11, 5,),
-  createData(9, '	Workman', 'To make sales easier', 12, 5,),
-  createData(10, 'Sterling', 'Printing your needs', 13, 5,),
-  createData(11, 'John Wiley and Sons', 'Publishing better', 14, 5,),
-  createData(12, 'Abrams', 'Motivating Community', 15, 5,),
-  createData(13, 'Dover', 'A new Words for all', 16, 5,),
-  createData(14, 'Candlewick', 'Printing is our Language', 17, 5,),
-  createData(15, 'W.W. Norton', 'Writing for your Success', 18, 5,),
+  createData(1, ["salam,", "hello"], ['Printing your dreams', 'da'], 3, 4,),
+  createData(2, ['HarperCollins'], ['You write, we publish', 'gfd'], 5, 5,),
+  createData(3, ['Simon & Schuster'], ['Presenting your thoughts to the world'], 6, 5,),
+  createData(4, ['Hachette Book Group'], ['Quality printing'], 7, 5,),
+  createData(5, ['Macmillan'], ['Get your dreams inked'], 8, 5,),
+  createData(6, ['Scholastic'], ['Fast and reliable'], 9, 5,),
+  createData(7, ['Disney Publishing Worldwide'], ['Experts in the field'], 10, 5,),
+  createData(8, ['Houghton Mifflin Harcourt'], ['One-stop for printing solutions'], 11, 5,),
+  createData(9, ['	Workman'], ['To make sales easier'], 12, 5,),
+  createData(10, ['Sterling'], ['Printing your needs'], 13, 5,),
+  createData(11, ['John Wiley and Sons'], ['Publishing better'], 14, 5,),
+  createData(12, ['Abrams'], ['Motivating Community'], 15, 5,),
+  createData(13, ['Dover'], ['A new Words for all'], 16, 5,),
+  createData(14, ['Candlewick'], ['Printing is our Language'], 17, 5,),
+  createData(15, ['W.W. Norton'], ['Writing for your Success'], 18, 5,),
 ];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -66,10 +66,14 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
-  const [activeDialog, setActiveDialog] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const matches = useMediaQuery('(min-width:1045px)');
   const [open, setOpen] = React.useState(false);
+  const [activeDialog, setActiveDialog] = React.useState(false);
+  const onCreate = (values) => {
+    console.log('Received values of form: ', values);
+    setOpen(false);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -126,10 +130,14 @@ export default function StickyHeadTable() {
                       <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                         {columns.map((column) => {
                           const value = row[column.id];
-                          if (column.id === 'authors') {
+                          if (column.id === 'authors' || column.id === 'categories') {
                             return (
                               <TableCell key={column.id} align={column.align}>
-                                <Chip label={value} />
+                                {value.map((item) => {
+                                  return (
+                                    <Chip label={item} />
+                                  )
+                                })}
                               </TableCell>
                             )
                           } else {
@@ -176,9 +184,13 @@ export default function StickyHeadTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <FormDialog open={activeDialog === 'form'} handleClose={() => {
-          setActiveDialog(false);
-        }} />
+        <CollectionCreateForm
+          open={activeDialog === 'form'}
+          onCreate={onCreate}
+          onCancel={() => {
+            setActiveDialog(false);
+          }}
+        />
       </div>
       <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
         setActiveDialog('form');

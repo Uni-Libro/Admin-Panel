@@ -1,94 +1,88 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import TextField from '@mui/material/TextField';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { createTheme, ThemeProvider } from '@mui/material';
-
-const theme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 400,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
-    },
-  },
-});
-
-export function FormDialog({
-  handleClose,
-  open,
-}) {
+import React from 'react';
+import { Form, Input, Modal, DatePicker, InputNumber } from 'antd';
+export function CollectionCreateForm({ open, onCreate, onCancel }) {
+  const [form] = Form.useForm();
+  const onChange = (value) => {
+    console.log('changed', value);
+  };
   return (
-    <ThemeProvider theme={theme}>
-      <Dialog open={open} onClose={handleClose} maxWidth='sm' >
-        <DialogTitle style={{ display: 'flex', textAlign: 'center', justifyContent: 'center' }}>Voucher</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="id"
-            label="ID"
-            type="name"
-            fullWidth
-            variant="standard"
-            sx={{ marginBottom: '10px' }}
-          /> <TextField
-            autoFocus
-            margin="dense"
-            id="code"
-            label="Code"
-            type="name"
-            fullWidth
-            variant="standard"
-            sx={{ marginBottom: '10px' }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="aDate"
-            label="Activation date"
-            type="name"
-            fullWidth
-            variant="standard"
-            sx={{ marginBottom: '10px' }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="eDate"
-            label="Expiration date"
-            type="name"
-            fullWidth
-            variant="standard"
-            sx={{ marginBottom: '10px' }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="percentage"
-            label="Discount percentage"
-            type="name"
-            fullWidth
-            variant="standard"
-            sx={{ marginBottom: '10px' }}
-          />
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
-        </DialogActions>
-      </Dialog>
-    </ThemeProvider>
-
+    <Modal
+      open={open}
+      title="Voucher"
+      okText="Submit"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate(values);
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        name="form_in_modal"
+        initialValues={{
+          modifier: 'public',
+        }}
+      >
+        <Form.Item
+          name="id"
+          label="ID"
+          rules={[
+            {
+              required: true,
+              message: 'Please input the voucher ID!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="code" label="Code" rules={[
+          {
+            required: true,
+            message: 'Please input the voucher code!',
+          },
+        ]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="aDate" label="Activation date" rules={[
+          {
+            required: true,
+            message: 'Please input the categories!',
+          },
+        ]}>
+          <DatePicker />
+        </Form.Item>
+        <Form.Item name="eDate" label="Expiration date" rules={[
+          {
+            required: true,
+            message: 'Please input the categories!',
+          },
+        ]}>
+          <DatePicker />
+        </Form.Item>
+        <Form.Item name="discount" label="Discount" rules={[
+          {
+            required: true,
+            message: 'Please input the discount percentage!',
+          },
+        ]}>
+          <InputNumber
+            defaultValue={20}
+            min={0}
+            max={100}
+            formatter={(value) => `${value}%`}
+            parser={(value) => value.replace('%', '')}
+            onChange={onChange} />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
-}
+};

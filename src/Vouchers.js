@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button, useMediaQuery } from '@mui/material';
-import { FormDialog } from './hooks/VouchersDialog';
+import { CollectionCreateForm } from './hooks/VouchersDialog';
 import ResponsiveAppBar from './NavBar';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -74,6 +74,10 @@ export default function StickyHeadTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [open, setOpen] = React.useState(false);
   const matches = useMediaQuery('(min-width:520px)');
+  const onCreate = (values) => {
+    console.log('Received values of form: ', values);
+    setOpen(false);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -172,9 +176,13 @@ export default function StickyHeadTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <FormDialog open={activeDialog === 'form'} handleClose={() => {
-          setActiveDialog(false);
-        }} />
+        <CollectionCreateForm
+          open={activeDialog === 'form'}
+          onCreate={onCreate}
+          onCancel={() => {
+            setActiveDialog(false);
+          }}
+        />
       </div>
       <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
         setActiveDialog('form');

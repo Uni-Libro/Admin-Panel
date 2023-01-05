@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { DeleteModal } from './hooks/UserDialog';
 import './Table-design.css'
 import { Button } from '@mui/material';
 import ResponsiveAppBar from './NavBar';
@@ -49,6 +50,7 @@ export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [open, setOpen] = React.useState(false);
+  const [activeDialog, setActiveDialog] = React.useState(false);
   // const matches = useMediaQuery('(min-width:600px)');
 
   const handleChangePage = (event, newPage) => {
@@ -63,7 +65,7 @@ export default function StickyHeadTable() {
   const handleClick = (row) => {
     setOpen(true);
     rows.filter((item) => item !== row);
-    //delete a row from the table
+    setActiveDialog(false);
 
   };
 
@@ -115,9 +117,8 @@ export default function StickyHeadTable() {
                           );
                         })}
                         <TableCell align='center'>
-                          <Button variant="contained" color="error" onClick={(row) => {
-                            //asinc function
-                            handleClick(row);
+                          <Button variant="contained" color="error" onClick={() => {
+                            setActiveDialog('delete');
                           }}>
                             Delete
                           </Button>
@@ -143,16 +144,14 @@ export default function StickyHeadTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        {/* <AlertDialog open={activeDialog === 'alert'} handleClose={() => {
-          setActiveDialog(false);
-          alert('It is being developed');
-        }
-        } />
-        <FormDialog open={activeDialog === 'form'} handleClose={() => {
-          setActiveDialog(false);
-          alert('It is being developed');
-        }} /> */}
+        <DeleteModal
+          open={activeDialog === 'delete'}
+          onDelete={handleClick}
+          onCancel={() => {
+            setActiveDialog(false);
+          }}
+        />
       </div>
-    </div >
+    </div>
   );
 }

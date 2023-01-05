@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button, useMediaQuery } from '@mui/material';
-import { CollectionCreateForm } from './hooks/VouchersDialog';
+import { CollectionCreateForm, DeleteModal } from './hooks/VouchersDialog';
 import ResponsiveAppBar from './NavBar';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -91,8 +91,7 @@ export default function StickyHeadTable() {
   const handleClick = (row) => {
     setOpen(true);
     rows.filter((item) => item !== row);
-    //delete a row from the table
-
+    setActiveDialog(false);
   };
 
   const handleClose = (event, reason) => {
@@ -144,8 +143,7 @@ export default function StickyHeadTable() {
                         })}
                         <TableCell align='center'>
                           <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={(row) => {
-                            //asinc function
-                            handleClick(row);
+                            setActiveDialog('delete');
                           }}>
                             Delete
                           </Button>
@@ -155,7 +153,7 @@ export default function StickyHeadTable() {
                             </Alert>
                           </Snackbar>
                           <Button variant="outlined" sx={{ marginLeft: matches ? 1 : 0, backgroundColor: '--bs-blue', marginTop: matches ? 0 : 1 }} onClick={() => {
-                            setActiveDialog('form');
+                            setActiveDialog('edit');
                           }}>
                             Edit
                           </Button>
@@ -177,15 +175,22 @@ export default function StickyHeadTable() {
           />
         </Paper>
         <CollectionCreateForm
-          open={activeDialog === 'form'}
+          open={activeDialog === 'edit'}
           onCreate={onCreate}
+          onCancel={() => {
+            setActiveDialog(false);
+          }}
+        />
+        <DeleteModal
+          open={activeDialog === 'delete'}
+          onDelete={handleClick}
           onCancel={() => {
             setActiveDialog(false);
           }}
         />
       </div>
       <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
-        setActiveDialog('form');
+        setActiveDialog('edit');
       }}>Add
       </Button>
     </div>

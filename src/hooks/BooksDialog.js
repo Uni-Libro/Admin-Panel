@@ -1,22 +1,9 @@
 import React from 'react';
-import { Form, Input, Modal, Button, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Form, Input, Modal, Button, Space } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+
 export function CollectionCreateForm({ open, onCreate, onCancel }) {
   const [form] = Form.useForm();
-  const props = {
-    name: 'file',
-    action: '/',
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
   return (
     <Modal
       open={open}
@@ -36,14 +23,10 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
           });
       }}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="form_in_modal"
-        initialValues={{
+      <Form form={form}
+        layout="vertical" name="dynamic_form_nest_item" initialValues={{
           modifier: 'public',
-        }}
-      >
+        }} autoComplete="off">
         <Form.Item
           name="name"
           label="Book name"
@@ -54,40 +37,131 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
             },
           ]}
         >
-          <Input />
+          <Input placeholder='Name' />
         </Form.Item>
-        <Form.Item name="authors" label="Authors" rules={[
+        <Form.Item name="authorId" label="Author ID" rules={[
           {
             required: true,
-            message: 'Please input the authors names!',
+            message: 'Please input the authors id!',
           },
         ]}>
-          <Input />
+          <Input placeholder='Author ID' />
         </Form.Item>
-        <Form.Item name="categories" label="Categories" rules={[
+        <Form.List name="authorsId">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...Field }) => (
+                <Space
+                  key={key}
+                  style={{
+                    display: 'flex',
+                    marginBottom: 5,
+                  }}
+                  align="baseline"
+                  size="large"
+                >
+                  <Form.Item
+                    {...Field}
+                    name={[name, 'authorId']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Missing Author ID',
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Author ID" />
+                  </Form.Item>
+                  <MinusCircleOutlined style={{ fontSize: '16px' }} onClick={() => remove(name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button onClick={() => add()} block icon={<PlusOutlined />}>
+                  Add author ID
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+        <Form.Item name="categorieId" label="Category ID" rules={[
           {
             required: true,
             message: 'Please input the categories!',
           },
         ]}>
-          <Input />
+          <Input placeholder='Category ID' />
         </Form.Item>
-        <Form.Item label="Book picture" valuePropName="fileList">
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item label="PDF" valuePropName="fileList" rules={[
+        <Form.List name="categoriesId">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...Field }) => (
+                <Space
+                  key={key}
+                  style={{
+                    display: 'flex',
+                    marginBottom: 5,
+                  }}
+                  align="baseline"
+                  size="large"
+                >
+                  <Form.Item
+                    {...Field}
+                    name={[name, 'categoryId']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Missing category ID',
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Category ID" />
+                  </Form.Item>
+                  <MinusCircleOutlined style={{ fontSize: '16px' }} onClick={() => remove(name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button onClick={() => add()} block icon={<PlusOutlined />}>
+                  Add category ID
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+        <Form.Item name="pictureUrl" label="Book picture URL" rules={[
           {
             required: true,
-            message: 'Please input the PDF!',
+            message: 'Please input the url!',
           },
         ]}>
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
+          <Input placeholder='URL' />
+        </Form.Item>
+        <Form.Item name="pdfUrl" label="Book PDF URL" rules={[
+          {
+            required: true,
+            message: 'Please input the url!',
+          },
+        ]}>
+          <Input placeholder='URL' />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
+
+export function DeleteModal({ open, onDelete, onCancel }) {
+  return (
+    <Modal
+      open={open}
+      title="⚠️ Delete"
+      okText="Delete"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        onDelete();
+      }}
+    >
+      <p>Are you sure you want to delete this?</p>
+    </Modal>
+  );
+};
+

@@ -1,22 +1,7 @@
 import React from 'react';
-import { Form, Input, Modal, Button, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Form, Input, Modal, } from 'antd';
 export function CollectionCreateForm({ open, onCreate, onCancel }) {
   const [form] = Form.useForm();
-  const props = {
-    name: 'file',
-    action: '/',
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
   return (
     <Modal
       open={open}
@@ -56,12 +41,32 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
         >
           <Input />
         </Form.Item>
-        <Form.Item label="Author picture" valuePropName="fileList">
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
+        <Form.Item name="pictureUrl" label="Author picture URL" rules={[
+          {
+            required: true,
+            message: 'Please input the url!',
+          },
+        ]}>
+          <Input placeholder='URL' />
         </Form.Item>
       </Form>
+    </Modal>
+  );
+};
+
+export function DeleteModal({ open, onDelete, onCancel }) {
+  return (
+    <Modal
+      open={open}
+      title="⚠️ Delete"
+      okText="Delete"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        onDelete();
+      }}
+    >
+      <p>Are you sure you want to delete this?</p>
     </Modal>
   );
 };

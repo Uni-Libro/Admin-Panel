@@ -9,37 +9,37 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button, Chip, useMediaQuery } from '@mui/material';
-import { CollectionCreateForm } from './hooks/BooksDialog';
+import { CollectionCreateForm, DeleteModal } from './hooks/BooksDialog';
 import ResponsiveAppBar from './NavBar';
 import AddIcon from '@mui/icons-material/Add';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 const columns = [
-  { id: 'name', label: 'Book name', minWidth: 100, align: 'center' },
-  { id: 'authors', label: 'Authors', minWidth: 100, align: 'center' },
+  { id: 'name', label: 'Book name', minWidth: 80, align: 'center' },
+  { id: 'authorsId', label: 'Authors ID', minWidth: 80, align: 'center' },
   {
-    id: 'categories',
-    label: 'Categories',
+    id: 'categoriesId',
+    label: 'Categories ID',
     minWidth: 100,
     align: 'center',
   },
   {
-    id: 'picture',
-    label: 'Book picture',
-    minWidth: 100,
+    id: 'pictureUrl',
+    label: 'Book picture URL',
+    minWidth: 120,
     align: 'center',
   },
   {
-    id: 'pdf',
-    label: 'Book PDF',
-    minWidth: 100,
+    id: 'pdfUrl',
+    label: 'Book PDF URL',
+    minWidth: 120,
     align: 'center',
   },
 ];
 
-function createData(name, authors, categories, picture, pdf) {
-  return { name, authors, categories, picture, pdf };
+function createData(name, authorsId, categoriesId, pictureUrl, pdfUrl) {
+  return { name, authorsId, categoriesId, pictureUrl, pdfUrl };
 }
 
 const rows = [
@@ -87,6 +87,7 @@ export default function StickyHeadTable() {
   const handleClick = (row) => {
     setOpen(true);
     rows.filter((item) => item !== row);
+    setActiveDialog(false);
     //delete a row from the table
 
   };
@@ -130,7 +131,7 @@ export default function StickyHeadTable() {
                       <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                         {columns.map((column) => {
                           const value = row[column.id];
-                          if (column.id === 'authors' || column.id === 'categories') {
+                          if (column.id === 'authorsId' || column.id === 'categoriesId') {
                             return (
                               <TableCell key={column.id} align={column.align}>
                                 {value.map((item) => {
@@ -151,9 +152,8 @@ export default function StickyHeadTable() {
                           }
                         })}
                         <TableCell align='center'>
-                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={(row) => {
-                            //asinc function
-                            handleClick(row);
+                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={() => {
+                            setActiveDialog('delete');
                           }}>
                             Delete
                           </Button>
@@ -163,7 +163,7 @@ export default function StickyHeadTable() {
                             </Alert>
                           </Snackbar>
                           <Button variant="outlined" sx={{ marginLeft: matches ? 1 : 0, backgroundColor: '--bs-blue', marginTop: matches ? 0 : 1 }} onClick={() => {
-                            setActiveDialog('form');
+                            setActiveDialog('edit');
                           }}>
                             Edit
                           </Button>
@@ -185,15 +185,22 @@ export default function StickyHeadTable() {
           />
         </Paper>
         <CollectionCreateForm
-          open={activeDialog === 'form'}
+          open={activeDialog === 'edit'}
           onCreate={onCreate}
+          onCancel={() => {
+            setActiveDialog(false);
+          }}
+        />
+        <DeleteModal
+          open={activeDialog === 'delete'}
+          onDelete={handleClick}
           onCancel={() => {
             setActiveDialog(false);
           }}
         />
       </div>
       <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
-        setActiveDialog('form');
+        setActiveDialog('edit');
       }}>Add
       </Button>
     </div>

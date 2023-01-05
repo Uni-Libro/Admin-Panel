@@ -86,3 +86,21 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
     </Modal>
   );
 };
+
+export function DeleteModal({ open, onDelete, onCancel }) {
+  return (
+    <Modal
+      open={open}
+      //warning icon
+      title="⚠️ Delete"
+      okText="Delete"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        onDelete();
+      }}
+    >
+      <p>Are you sure you want to delete this?</p>
+    </Modal>
+  );
+};

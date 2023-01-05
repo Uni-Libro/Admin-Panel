@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './Table-design.css'
 import { Button, useMediaQuery } from '@mui/material';
-import { CollectionCreateForm } from './hooks/AuthorsDialog';
+import { CollectionCreateForm, DeleteModal } from './hooks/AuthorsDialog';
 import ResponsiveAppBar from './NavBar';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -17,15 +17,15 @@ import AddIcon from '@mui/icons-material/Add';
 const columns = [
   { id: 'name', label: 'Author Name', minWidth: 100, align: 'center' },
   {
-    id: 'picture',
-    label: 'Author picture',
+    id: 'pictureUrl',
+    label: 'Author picture URL',
     minWidth: 300,
     align: 'center',
   },
 ];
 
-function createData(name, picture) {
-  return { name, picture };
+function createData(name, pictureUrl) {
+  return { name, pictureUrl };
 }
 
 const rows = [
@@ -73,8 +73,7 @@ export default function StickyHeadTable() {
   const handleClick = (row) => {
     setOpen(true);
     rows.filter((item) => item !== row);
-    //delete a row from the table
-
+    setActiveDialog(false);
   };
 
   const handleClose = (event, reason) => {
@@ -125,9 +124,9 @@ export default function StickyHeadTable() {
                           );
                         })}
                         <TableCell align='center'>
-                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={(row) => {
+                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={() => {
                             //asinc function
-                            handleClick(row);
+                            setActiveDialog('delete');
                           }}>
                             Delete
                           </Button>
@@ -161,6 +160,13 @@ export default function StickyHeadTable() {
         <CollectionCreateForm
           open={activeDialog === 'form'}
           onCreate={onCreate}
+          onCancel={() => {
+            setActiveDialog(false);
+          }}
+        />
+        <DeleteModal
+          open={activeDialog === 'delete'}
+          onDelete={handleClick}
           onCancel={() => {
             setActiveDialog(false);
           }}

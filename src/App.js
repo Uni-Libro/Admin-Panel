@@ -46,6 +46,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={isLoggedin() ? <Users /> : <Auth />} />
+
         <Route path="/users" element={isLoggedin() ? <Users /> : <Auth />} />
         <Route
           path="/authors"

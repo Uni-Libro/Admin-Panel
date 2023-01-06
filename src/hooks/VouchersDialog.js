@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Modal, DatePicker, InputNumber } from 'antd';
-export function CollectionCreateForm({ open, onCreate, onCancel }) {
+export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
   const [form] = Form.useForm();
+  useEffect(() => {
+    form.setFieldsValue({
+      id: (data && data.id) || '',
+      code: (data && data.code) || '',
+      aDate: (data && data.aDate) || '',
+      eDate: (data && data.eDate) || '',
+      discount: (data && data.discount) || '',
+    });
+  }, [data]);
   const onChange = (value) => {
     console.log('changed', value);
   };
@@ -30,6 +39,11 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
         name="form_in_modal"
         initialValues={{
           modifier: 'public',
+          id: data && data.id,
+          code: data && data.code,
+          aDate: data && data.aDate,
+          eDate: data && data.eDate,
+          discount: data && data.discount,
         }}
       >
         <Form.Item
@@ -42,7 +56,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
             },
           ]}
         >
-          <Input />
+          <Input dir="rtl" />
         </Form.Item>
         <Form.Item name="code" label="Code" rules={[
           {
@@ -50,7 +64,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
             message: 'Please input the voucher code!',
           },
         ]}>
-          <Input />
+          <Input dir="rtl" />
         </Form.Item>
         <Form.Item name="aDate" label="Activation date" rules={[
           {

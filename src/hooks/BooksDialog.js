@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Modal, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-export function CollectionCreateForm({ open, onCreate, onCancel }) {
+export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
   const [form] = Form.useForm();
+  useEffect(() => {
+    form.setFieldsValue({
+      name: (data && data.name) || '',
+      authorId: data && data.authorId,
+      authorsId: data && data.authorsId,
+      categorieId: data && data.categorieId,
+      categoriesId: data && data.categoriesId,
+      description: (data && data.description) || '',
+    });
+  }, [data]);
   return (
     <Modal
       open={open}
@@ -26,7 +36,13 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
       <Form form={form}
         layout="vertical" name="dynamic_form_nest_item" initialValues={{
           modifier: 'public',
-        }} autoComplete="off">
+          name: data && data.name,
+          authorId: data && data.authorId,
+          authorsId: data && data.authorsId,
+          categorieId: data && data.categorieId,
+          categoriesId: data && data.categoriesId,
+          description: data && data.description,
+        }}>
         <Form.Item
           name="name"
           label="Book name"
@@ -37,7 +53,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
             },
           ]}
         >
-          <Input placeholder='Name' />
+          <Input placeholder='Name' dir="rtl" />
         </Form.Item>
         <Form.Item name="authorId" label="Author ID" rules={[
           {
@@ -70,7 +86,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
                       },
                     ]}
                   >
-                    <Input placeholder="Author ID" />
+                    <Input placeholder="Author ID" dir="rtl" />
                   </Form.Item>
                   <MinusCircleOutlined style={{ fontSize: '16px' }} onClick={() => remove(name)} />
                 </Space>
@@ -114,7 +130,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
                       },
                     ]}
                   >
-                    <Input placeholder="Category ID" />
+                    <Input placeholder="Category ID" dir="rtl" />
                   </Form.Item>
                   <MinusCircleOutlined style={{ fontSize: '16px' }} onClick={() => remove(name)} />
                 </Space>
@@ -133,7 +149,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
             message: 'Please input the url!',
           },
         ]}>
-          <Input placeholder='URL' />
+          <Input placeholder='URL' dir="rtl" />
         </Form.Item>
         <Form.Item name="pdfUrl" label="Book PDF URL" rules={[
           {
@@ -141,7 +157,8 @@ export function CollectionCreateForm({ open, onCreate, onCancel }) {
             message: 'Please input the url!',
           },
         ]}>
-          <Input placeholder='URL' />
+          <Input placeholder='URL' dir="rtl" />
+          <Input.TextArea placeholder="description" dir="rtl" rows={4} />
         </Form.Item>
       </Form>
     </Modal>

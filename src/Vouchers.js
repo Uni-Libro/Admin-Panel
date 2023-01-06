@@ -1,7 +1,9 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
+import Grid from "@mui/material/Grid";
+import CircularProgress from "@mui/material/CircularProgress";
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -14,8 +16,9 @@ import ResponsiveAppBar from './NavBar';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import AddIcon from '@mui/icons-material/Add';
+import { createVoucher, deleteVoucher, getVouchers, updateVoucher } from './service/vouchers';
 const columns = [
-  { id: 'id', label: 'ID', minWidth: 100, align: 'center' },
+  { id: 'id', label: 'Voucher Id', minWidth: 50, align: 'center' },
   {
     id: 'code',
     label: 'Code',
@@ -42,45 +45,47 @@ const columns = [
   },
 ];
 
-function createData(id, code, aDate, eDate, percentage) {
-  return { id, code, aDate, eDate, percentage };
-}
-
-const rows = [
-  createData(1, 'Penguin Random House', 1, 3, 4),
-  createData(2, 'HarperCollins', 1, 6, 4),
-  createData(3, 'Simon & Schuster', 4, 6, 7),
-  createData(4, 'Hachette Book Group', 4, 7, 8),
-  createData(5, 'Macmillan', 6, 8, 0),
-  createData(6, 'Scholastic', 4, 6, 8),
-  createData(7, 'Disney Publishing Worldwide', 3, 5, 7),
-  createData(8, 'Houghton Mifflin Harcourt', 2, 6, 8),
-  createData(9, '	Workman', 4, 8, 9),
-  createData(10, 'Sterling', 5, 7, 9),
-  createData(11, 'John Wiley and Sons', 5, 8, 4),
-  createData(12, 'Abrams', 4, 7, 3),
-  createData(13, 'Dover', 3, 7, 4),
-  createData(14, 'Candlewick', 76, 8, 4),
-  createData(15, 'W.W. Norton', 54, 8, 6),
-];
-
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
-  const [activeDialog, setActiveDialog] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  const [activeDialog, setActiveDialog] = React.useState({ type: false });
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [data, setData] = useState({ count: 0, rows: [] });
+  const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState(false);
   const matches = useMediaQuery('(min-width:520px)');
-  const onCreate = (values) => {
-    console.log('Received values of form: ', values);
+  const onCreate = async (values) => {
+    const finalDatas = {
+      description: "",
+      ...(activeDialog.data || {}),
+      ...values,
+    };
+
+    try {
+      const response = finalDatas.id
+        ? await updateVoucher(finalDatas.id, finalDatas)
+        : await createVoucher(finalDatas);
+      const updatedData = response.data.data;
+      setData((prev) => {
+        const rows = prev.fillter((row) => row.id !== updatedData.id);
+        return { ...prev, rows: [...rows, updatedData] };
+      });
+    } catch (err) {
+      console.log(err.response.data.message);
+      setError(err.response.data.message || true);
+    }
+
     setOpen(false);
+    setActiveDialog({});
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    loadData(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -88,9 +93,15 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
-  const handleClick = (row) => {
-    setOpen(true);
-    rows.filter((item) => item !== row);
+  const handleClick = async (row) => {
+    if (activeDialog.data) {
+      try {
+        await deleteAuthor(activeDialog.data.id);
+        setOpen(true);
+      } catch {
+        setError(true);
+      }
+    }
     setActiveDialog(false);
   };
 
@@ -98,9 +109,43 @@ export default function StickyHeadTable() {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
+    setError(false);
   };
+
+  const loadData = async (newPage = page) => {
+    setIsLoading(true);
+
+    try {
+      const response = await getVouchers(newPage, rowsPerPage);
+      setData((prev) => {
+        const updatedRows = [...prev.rows, ...response.data.data.rows];
+
+        const uniqueRows = updatedRows.filter(
+          (row, index, self) => index === self.findIndex((r) => r.id === row.id)
+        );
+        return {
+          count: response.data.data.count,
+          rows: uniqueRows,
+        };
+      });
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Grid container justifyContent="center" alignItems="center">
+        <CircularProgress />
+      </Grid>
+    );
+  }
 
   return (
 
@@ -126,7 +171,7 @@ export default function StickyHeadTable() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows
+                {data.rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
@@ -142,18 +187,22 @@ export default function StickyHeadTable() {
                           );
                         })}
                         <TableCell align='center'>
-                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={(row) => {
-                            setActiveDialog('delete');
+                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={() => {
+                            setActiveDialog({ type: "delete", data: row });
                           }}>
                             Delete
                           </Button>
-                          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-                            <Alert onClose={handleClose} severity="success" sx={{ width: '100%', boxShadow: 'none' }}>
-                              Successfully deleted!
+                          <Snackbar open={open || error} autoHideDuration={4000} onClose={handleClose}>
+                            <Alert onClose={handleClose} severity={error ? "error" : "success"} sx={{ width: '100%', boxShadow: 'none' }}>
+                              {error
+                                ? typeof error === "string"
+                                  ? error
+                                  : "Something Went Wrong"
+                                : "Successfully deleted!"}
                             </Alert>
                           </Snackbar>
                           <Button variant="outlined" sx={{ marginLeft: matches ? 1 : 0, backgroundColor: '--bs-blue', marginTop: matches ? 0 : 1 }} onClick={() => {
-                            setActiveDialog('edit');
+                            setActiveDialog({ type: "form", data: row });
                           }}>
                             Edit
                           </Button>
@@ -167,7 +216,7 @@ export default function StickyHeadTable() {
           <TablePagination
             rowsPerPageOptions={[50]}
             component="div"
-            count={rows.length}
+            count={data.count}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -175,22 +224,23 @@ export default function StickyHeadTable() {
           />
         </Paper>
         <CollectionCreateForm
-          open={activeDialog === 'edit'}
+          open={activeDialog.type === 'form'}
+          data={activeDialog.data}
           onCreate={onCreate}
           onCancel={() => {
-            setActiveDialog(false);
+            setActiveDialog({});
           }}
         />
         <DeleteModal
-          open={activeDialog === 'delete'}
+          open={activeDialog.type === 'delete'}
           onDelete={handleClick}
           onCancel={() => {
-            setActiveDialog(false);
+            setActiveDialog({});
           }}
         />
       </div>
       <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
-        setActiveDialog('edit');
+        setActiveDialog({ type: "form" });
       }}>Add
       </Button>
     </div>

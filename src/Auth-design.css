@@ -11,79 +11,11 @@
 }
 
 .Auth-form {
-  width: 25rem;
-  height: 30rem;
-  padding-top: 30px;
-  padding-bottom: 20px;
-  border-radius: 15px;
-  background-color: rgb(2, 23, 20);
-}
-
-.Auth-form-content {
-  padding-left: 18%;
-  padding-right: 18%;
-}
-
-.Auth-form-title {
-  text-align: center;
-  margin-bottom: 3em;
-  font-size: 24px;
-  color: rgb(156, 154, 154);
-  font-weight: 600;
-}
-
-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgb(181, 181, 181);
-}
-
-.btn-grad {
-  background-image: linear-gradient(
-    to right,
-    #676565 0%,
-    #274046 51%,
-    #676565 100%
-  );
-  padding: 15px 20px;
-  margin-top: 2em;
-  text-align: center;
-  text-transform: uppercase;
-  transition: 0.5s;
-  background-size: 200% auto;
-  color: rgb(2, 23, 20);
-  font-weight: 550;
-  border-radius: 10px;
-  display: block;
-  border: none;
-}
-
-.btn-grad:hover {
-  background-position: right center; /* change the direction of the change here */
-  text-decoration: none;
-}
-
-.form-control {
-  background-color: rgb(2, 23, 20);
-  border: none;
-  border-bottom: 1px solid rgb(181, 181, 181);
-  color: rgb(181, 181, 181);
-  border-radius: 0;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 1.5em;
-}
-
-.form-control:focus {
-  background-color: rgb(2, 23, 20);
-  border: none;
-  border-bottom: 2px solid rgb(181, 181, 181);
-  color: rgb(181, 181, 181);
-  font-size: 14px;
-  border-radius: 0;
-  font-weight: 650;
-  margin-bottom: 1.5em;
-  box-shadow: none;
+  width: 50%;
+  padding: 32px;
+  margin: auto;
+  min-width: 330px;
+  max-width: 500px;
 }
 
 @keyframes gradient {
@@ -96,4 +28,14 @@ label {
   100% {
     background-position: 0% 50%;
   }
+}
+
+.error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: crimson;
+  border-radius: 8px;
+  padding: 8px;
+  color: rgb(181, 181, 181);
 }

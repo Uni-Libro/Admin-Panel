@@ -1,16 +1,17 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import MenuItem from '@mui/material/MenuItem';
-import { Link } from '@mui/material';
-import './nav_bar.css'
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import MenuItem from "@mui/material/MenuItem";
+import { Typography } from "@mui/material";
+import { Link as NavigationLink } from "react-router-dom";
+import "./nav_bar.css";
 
-const pages = ['Users', 'Authors', 'Books', 'Vouchers'];
+const pages = ["Users", "Authors", "Books", "Vouchers"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -25,17 +26,17 @@ function ResponsiveAppBar() {
 
   const handleColorofLink = (page) => {
     if (page === window.location.pathname.slice(1)) {
-      return 'white'
+      return "white";
     } else {
-      return '#a0a0a0'
+      return "#a0a0a0";
     }
-  }
+  };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: 'black' }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "black" }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters >
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+        <Toolbar disableGutters>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -50,47 +51,56 @@ function ResponsiveAppBar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link
-                    key={page}
-                    href={page}
-                    underline="none"
-                    sx={{ color: 'black', "&:hover": { color: '#ff3c78' } }}
+                  <NavigationLink
+                    style={{ textDecoration: "none" }}
+                    to={`/${page.toLowerCase()}`}
                   >
-                    {page}
-                  </Link>
+                    <Typography
+                      className="nav-link"
+                      key={page}
+                      color={handleColorofLink(page)}
+                      sx={{ my: 2, display: "block", mx: 2 }}
+                    >
+                      {page}
+                    </Typography>
+                  </NavigationLink>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link
-                key={page}
-                href={page}
-                underline='none'
-                color={handleColorofLink(page)}
-                sx={{ my: 2, display: 'block', mx: 2 }}
-
-                className="nav-link"
+              <NavigationLink
+                style={{ textDecoration: "none" }}
+                to={`/${page.toLowerCase()}`}
               >
-                {page}
-              </Link>
+                <Typography
+                  as="p"
+                  key={page}
+                  underline="none"
+                  color={handleColorofLink(page)}
+                  sx={{ my: 2, display: "block", mx: 2 }}
+                  className="nav-link"
+                >
+                  {page}
+                </Typography>
+              </NavigationLink>
             ))}
           </Box>
         </Toolbar>

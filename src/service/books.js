@@ -1,4 +1,4 @@
-import axiosInstance from "../index";
+import axiosInstance from "./index";
 
 // get all books with pagination
 export function getBooks(page, limit) {

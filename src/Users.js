@@ -16,10 +16,8 @@ import ResponsiveAppBar from './NavBar';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import {
-  createUser,
   deleteUser,
   getUsers,
-  updateUser,
 } from './service/users';
 const columns = [
   { id: 'id', label: 'User Id', minWidth: 50, align: 'center' },

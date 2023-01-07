@@ -96,7 +96,7 @@ export default function StickyHeadTable() {
   const handleClick = async (row) => {
     if (activeDialog.data) {
       try {
-        await deleteAuthor(activeDialog.data.id);
+        await deleteVoucher(activeDialog.data.id);
         setOpen(true);
       } catch {
         setError(true);

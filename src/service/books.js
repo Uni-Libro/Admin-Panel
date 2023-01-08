@@ -19,12 +19,21 @@ export function getBookById(id) {
 }
 
 // create new book
-export function createBook(book) {
-  return axiosInstance.post("/books", book, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+export function createBook({ price, category, authors, ...rest }) {
+  return axiosInstance.post(
+    "/books",
+    {
+      price: Number(price),
+      category: category.filter((c) => category.indexOf(c) !== -1),
+      authors: authors.filter((c) => authors.indexOf(c) !== -1),
+      ...rest,
     },
-  });
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
 }
 
 // update book

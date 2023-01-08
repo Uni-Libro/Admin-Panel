@@ -22,6 +22,7 @@ const columns = [
   { id: "id", label: "Book Id", minWidth: 80, align: "center" },
   { id: "name", label: "Book name", minWidth: 80, align: "center" },
   { id: "imageUrl", label: "Image URL", minWidth: 80, align: "center" },
+  { id: "price", label: "Price", minWidth: 80, align: "center" },
   {
     id: "CategoryBook",
     label: "Categories ID",
@@ -57,6 +58,24 @@ export default function StickyHeadTable() {
       ...values,
     };
 
+    finalDatas.CategoryBook = finalDatas.CategoryBook
+      ? [
+          ...finalDatas.CategoryBook,
+          { CategoryModelId: finalDatas.CategoryModelId },
+        ]
+      : [{ CategoryModelId: finalDatas.CategoryModelId }];
+
+    finalDatas.AuthorBook = finalDatas.AuthorBook
+      ? [...finalDatas.AuthorBook, { AuthorModelId: finalDatas.AuthorModelId }]
+      : [{ AuthorModelId: finalDatas.AuthorModelId }];
+    finalDatas.category = finalDatas.CategoryBook.map(({ CategoryModelId }) =>
+      Number(CategoryModelId)
+    ).filter(Boolean);
+
+    finalDatas.authors = finalDatas.AuthorBook.map(({ AuthorModelId }) =>
+      Number(AuthorModelId)
+    ).filter(Boolean);
+
     try {
       const response = finalDatas.id
         ? await updateBook(finalDatas.id, finalDatas)
@@ -67,7 +86,7 @@ export default function StickyHeadTable() {
         return { ...prev, rows: [...rows, updatedData] };
       });
     } catch (err) {
-      console.log(err.response.data.message);
+      console.log(err);
       setError(err.response.data.message || true);
     }
 

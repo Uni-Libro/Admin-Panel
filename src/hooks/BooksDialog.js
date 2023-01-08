@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Modal, Button, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useEffect } from "react";
+import { Form, Input, Modal, Button, Space, InputNumber } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { priceFormatter } from "../utils/price-format";
 
 export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
   const [form] = Form.useForm();
   useEffect(() => {
     form.setFieldsValue({
-      name: (data && data.name) || '',
+      name: (data && data.name) || "",
       imageUrl: data && data.imageUrl,
-      CategoryModelId: data && data.CategoryBook.CategoryModelId,
-      AuthorModelId: data && data.AuthorBook.AuthorModelId,
     });
   }, [data]);
   return (
@@ -27,46 +26,54 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
             onCreate(values);
           })
           .catch((info) => {
-            console.log('Validate Failed:', info);
+            console.log("Validate Failed:", info);
           });
       }}
     >
-      <Form form={form}
-        layout="vertical" name="dynamic_form_nest_item" initialValues={{
-          modifier: 'public',
+      <Form
+        form={form}
+        layout="vertical"
+        name="dynamic_form_nest_item"
+        initialValues={{
+          modifier: "public",
           name: data && data.name,
           imageUrl: data && data.imageUrl,
           CategoryModelId: data && data.CategoryBook.CategoryModelId,
           AuthorModelId: data && data.AuthorBook.AuthorModelId,
-        }}>
+        }}
+      >
         <Form.Item
           name="name"
           label="Book name"
           rules={[
             {
               required: true,
-              message: 'Please input the book name!',
+              message: "Please input the book name!",
             },
           ]}
         >
-          <Input placeholder='Name' dir="rtl" />
+          <Input placeholder="Name" dir="rtl" />
         </Form.Item>
-        <Form.Item name="AuthorModelId" label="Author ID" rules={[
-          {
-            required: true,
-            message: 'Please input the author id!',
-          },
-        ]}>
-          <Input placeholder='Author ID' />
+        <Form.Item
+          name="AuthorModelId"
+          label="Author ID"
+          rules={[
+            {
+              required: true,
+              message: "Please input the author id!",
+            },
+          ]}
+        >
+          <Input placeholder="Author ID" />
         </Form.Item>
-        <Form.List name="AuthorBook">
+        <Form.List initialValue={[1]} name="AuthorBook">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...Field }) => (
                 <Space
                   key={key}
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     marginBottom: 5,
                   }}
                   align="baseline"
@@ -74,17 +81,20 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
                 >
                   <Form.Item
                     {...Field}
-                    name={[name, 'AuthorModelId']}
+                    name={[name, "AuthorModelId"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Missing Author ID',
+                        message: "Missing Author ID",
                       },
                     ]}
                   >
                     <Input placeholder="Author ID" dir="rtl" />
                   </Form.Item>
-                  <MinusCircleOutlined style={{ fontSize: '16px' }} onClick={() => remove(name)} />
+                  <MinusCircleOutlined
+                    style={{ fontSize: "16px" }}
+                    onClick={() => remove(name)}
+                  />
                 </Space>
               ))}
               <Form.Item>
@@ -95,13 +105,17 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
             </>
           )}
         </Form.List>
-        <Form.Item name="CategoryModelId" label="Category ID" rules={[
-          {
-            required: true,
-            message: 'Please input the category!',
-          },
-        ]}>
-          <Input placeholder='Category ID' />
+        <Form.Item
+          name="CategoryModelId"
+          label="Category ID"
+          rules={[
+            {
+              required: true,
+              message: "Please input the category!",
+            },
+          ]}
+        >
+          <Input placeholder="Category ID" />
         </Form.Item>
         <Form.List name="CategoryBook">
           {(fields, { add, remove }) => (
@@ -110,7 +124,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
                 <Space
                   key={key}
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     marginBottom: 5,
                   }}
                   align="baseline"
@@ -118,17 +132,20 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
                 >
                   <Form.Item
                     {...Field}
-                    name={[name, 'CategoryModelId']}
+                    name={[name, "CategoryModelId"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Missing category ID',
+                        message: "Missing category ID",
                       },
                     ]}
                   >
                     <Input placeholder="Category ID" dir="rtl" />
                   </Form.Item>
-                  <MinusCircleOutlined style={{ fontSize: '16px' }} onClick={() => remove(name)} />
+                  <MinusCircleOutlined
+                    style={{ fontSize: "16px" }}
+                    onClick={() => remove(name)}
+                  />
                 </Space>
               ))}
               <Form.Item>
@@ -139,18 +156,34 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
             </>
           )}
         </Form.List>
-        <Form.Item name="imageUrl" label="Book image URL" rules={[
-          {
-            required: true,
-            message: 'Please input the url!',
-          },
-        ]}>
-          <Input placeholder='URL' dir="rtl" />
+        <Form.Item
+          name="price"
+          label="Price of book"
+          rules={[
+            {
+              required: true,
+              message: "Please input the price!",
+            },
+          ]}
+        >
+          <InputNumber addonAfter="Toman" />
+        </Form.Item>
+        <Form.Item
+          name="imageUrl"
+          label="Book image URL"
+          rules={[
+            {
+              required: true,
+              message: "Please input the url!",
+            },
+          ]}
+        >
+          <Input placeholder="URL" dir="rtl" />
         </Form.Item>
       </Form>
     </Modal>
   );
-};
+}
 
 export function DeleteModal({ open, onDelete, onCancel }) {
   return (
@@ -167,5 +200,4 @@ export function DeleteModal({ open, onDelete, onCancel }) {
       <p>Are you sure you want to delete this?</p>
     </Modal>
   );
-};
-
+}

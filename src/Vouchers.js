@@ -1,53 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import React, { useState, useEffect } from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
 import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import './Table-design.css'
-import { Button, useMediaQuery } from '@mui/material';
-import { CollectionCreateForm, DeleteModal } from './hooks/VouchersDialog';
-import ResponsiveAppBar from './NavBar';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import AddIcon from '@mui/icons-material/Add';
-import { createVoucher, deleteVoucher, getVouchers, updateVoucher } from './service/vouchers';
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import "./Table-design.css";
+import { Button, useMediaQuery } from "@mui/material";
+import { CollectionCreateForm, DeleteModal } from "./hooks/VouchersDialog";
+import ResponsiveAppBar from "./NavBar";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  createVoucher,
+  deleteVoucher,
+  getVouchers,
+  updateVoucher,
+} from "./service/vouchers";
+import { timeFormatter } from "./utils/time-format";
+import { priceFormatter } from "./utils/price-format";
+
 const columns = [
-  { id: 'id', label: 'Voucher Id', minWidth: 50, align: 'center' },
+  { id: "id", label: "Voucher Id", minWidth: 50, align: "center" },
   {
-    id: 'code',
-    label: 'Code',
+    id: "code",
+    label: "Code",
     minWidth: 100,
-    align: 'center',
+    align: "center",
   },
   {
-    id: 'discount',
-    label: 'Discount percentage',
+    id: "discount",
+    label: "Discount percentage",
     minWidth: 100,
-    align: 'center',
+    align: "center",
   },
   {
-    id: 'upTo',
-    label: 'Up tp',
+    id: "upTo",
+    label: "Up to (Toman)",
     minWidth: 100,
-    align: 'center',
+    align: "center",
+    format: priceFormatter,
   },
   {
-    id: 'validFrom',
-    label: 'Active from',
+    id: "validFrom",
+    label: "Active from",
     minWidth: 100,
-    align: 'center',
+    align: "center",
+    format: timeFormatter,
   },
   {
-    id: 'validTo',
-    label: 'Active to',
+    id: "validTo",
+    label: "Active to",
     minWidth: 100,
-    align: 'center',
+    align: "center",
+    format: timeFormatter,
   },
 ];
 
@@ -63,7 +74,7 @@ export default function StickyHeadTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState(false);
-  const matches = useMediaQuery('(min-width:520px)');
+  const matches = useMediaQuery("(min-width:520px)");
   const onCreate = async (values) => {
     const finalDatas = {
       description: "",
@@ -77,8 +88,8 @@ export default function StickyHeadTable() {
         : await createVoucher(finalDatas);
       const updatedData = response.data.data;
       setData((prev) => {
-        const rows = prev.fillter((row) => row.id !== updatedData.id);
-        return { ...prev, rows: [...rows, updatedData] };
+        const rows = prev.rows.filter((row) => row.id !== updatedData.id);
+        return { count: prev.count, rows: [...rows, updatedData] };
       });
     } catch (err) {
       console.log(err.response.data.message);
@@ -102,7 +113,16 @@ export default function StickyHeadTable() {
   const handleClick = async (row) => {
     if (activeDialog.data) {
       try {
-        await deleteVoucher(activeDialog.data.id);
+        const response = await deleteVoucher(activeDialog.data.id);
+        setData((prev) => {
+          const rows = prev.rows.filter(
+            (item) => item.id !== response.data.data.id
+          );
+          return {
+            rows,
+            count: prev.count,
+          };
+        });
         setOpen(true);
       } catch {
         setError(true);
@@ -112,7 +132,7 @@ export default function StickyHeadTable() {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpen(false);
@@ -154,12 +174,11 @@ export default function StickyHeadTable() {
   }
 
   return (
-
-    <div className='content'>
+    <div className="content">
       <ResponsiveAppBar />
-      <div className='table'>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 500 }} className='table-container'>
+      <div className="table">
+        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+          <TableContainer sx={{ maxHeight: 500 }} className="table-container">
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
@@ -167,13 +186,17 @@ export default function StickyHeadTable() {
                     <TableCell
                       key={column.id}
                       align={column.align}
-                      style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
+                      style={{ minWidth: column.minWidth, fontWeight: "bold" }}
                     >
                       {column.label}
                     </TableCell>
                   ))}
-                  <TableCell align='center'
-                    style={{ minWidth: 100, fontWeight: 'bold' }}>Actions</TableCell>
+                  <TableCell
+                    align="center"
+                    style={{ minWidth: 100, fontWeight: "bold" }}
+                  >
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -181,25 +204,41 @@ export default function StickyHeadTable() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                      >
                         {columns.map((column) => {
                           const value = row[column.id];
                           return (
                             <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
+                              {column.format ? column.format(value) : value}
                             </TableCell>
                           );
                         })}
-                        <TableCell align='center'>
-                          <Button variant="contained" sx={{ marginRight: matches ? 1 : 0 }} color="error" onClick={() => {
-                            setActiveDialog({ type: "delete", data: row });
-                          }}>
+                        <TableCell align="center">
+                          <Button
+                            variant="contained"
+                            sx={{ marginRight: matches ? 1 : 0 }}
+                            color="error"
+                            onClick={() => {
+                              setActiveDialog({ type: "delete", data: row });
+                            }}
+                          >
                             Delete
                           </Button>
-                          <Snackbar open={open || error} autoHideDuration={4000} onClose={handleClose}>
-                            <Alert onClose={handleClose} severity={error ? "error" : "success"} sx={{ width: '100%', boxShadow: 'none' }}>
+                          <Snackbar
+                            open={open || error}
+                            autoHideDuration={4000}
+                            onClose={handleClose}
+                          >
+                            <Alert
+                              onClose={handleClose}
+                              severity={error ? "error" : "success"}
+                              sx={{ width: "100%", boxShadow: "none" }}
+                            >
                               {error
                                 ? typeof error === "string"
                                   ? error
@@ -207,9 +246,17 @@ export default function StickyHeadTable() {
                                 : "Successfully deleted!"}
                             </Alert>
                           </Snackbar>
-                          <Button variant="outlined" sx={{ marginLeft: matches ? 1 : 0, backgroundColor: '--bs-blue', marginTop: matches ? 0 : 1 }} onClick={() => {
-                            setActiveDialog({ type: "form", data: row });
-                          }}>
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              marginLeft: matches ? 1 : 0,
+                              backgroundColor: "--bs-blue",
+                              marginTop: matches ? 0 : 1,
+                            }}
+                            onClick={() => {
+                              setActiveDialog({ type: "form", data: row });
+                            }}
+                          >
                             Edit
                           </Button>
                         </TableCell>
@@ -230,7 +277,7 @@ export default function StickyHeadTable() {
           />
         </Paper>
         <CollectionCreateForm
-          open={activeDialog.type === 'form'}
+          open={activeDialog.type === "form"}
           data={activeDialog.data}
           onCreate={onCreate}
           onCancel={() => {
@@ -238,16 +285,22 @@ export default function StickyHeadTable() {
           }}
         />
         <DeleteModal
-          open={activeDialog.type === 'delete'}
+          open={activeDialog.type === "delete"}
           onDelete={handleClick}
           onCancel={() => {
             setActiveDialog({});
           }}
         />
       </div>
-      <Button variant="outlined" sx={{ marginLeft: '45%' }} endIcon={<AddIcon />} onClick={() => {
-        setActiveDialog({ type: "form" });
-      }}>Add
+      <Button
+        variant="outlined"
+        sx={{ marginLeft: "45%" }}
+        endIcon={<AddIcon />}
+        onClick={() => {
+          setActiveDialog({ type: "form" });
+        }}
+      >
+        Add
       </Button>
     </div>
   );

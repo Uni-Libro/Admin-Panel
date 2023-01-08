@@ -19,21 +19,29 @@ export function getVoucherById(id) {
 }
 
 // create new voucher
-export function createVoucher(voucher) {
-  return axiosInstance.post("/vouchers", voucher, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+export function createVoucher({ discount, upTo, ...rest }) {
+  return axiosInstance.post(
+    "/vouchers",
+    { upTo: Number(upTo), discount: Number(discount), ...rest },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
 }
 
 // update voucher
-export function updateVoucher(id, voucher) {
-  return axiosInstance.put(`/vouchers/${id}`, voucher, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+export function updateVoucher(id, { discount, upTo, ...rest }) {
+  return axiosInstance.put(
+    `/vouchers/${id}`,
+    { upTo: Number(upTo), discount: Number(discount), ...rest },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
 }
 
 // delete voucher

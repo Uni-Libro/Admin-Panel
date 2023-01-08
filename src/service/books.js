@@ -1,8 +1,8 @@
 import axiosInstance from "./index";
 
 // get all books with pagination
-export function getBooks() {
-  return axiosInstance.get(`/books`, {
+export function getBooks(page, limit) {
+  return axiosInstance.get(`/books?page=${page}&limit=${limit}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },

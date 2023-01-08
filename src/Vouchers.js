@@ -26,20 +26,26 @@ const columns = [
     align: 'center',
   },
   {
-    id: 'aDate',
-    label: 'Activation date',
-    minWidth: 100,
-    align: 'center',
-  },
-  {
-    id: 'eDate',
-    label: 'Expiration date',
-    minWidth: 100,
-    align: 'center',
-  },
-  {
-    id: 'percentage',
+    id: 'discount',
     label: 'Discount percentage',
+    minWidth: 100,
+    align: 'center',
+  },
+  {
+    id: 'upTo',
+    label: 'Up tp',
+    minWidth: 100,
+    align: 'center',
+  },
+  {
+    id: 'validFrom',
+    label: 'Active from',
+    minWidth: 100,
+    align: 'center',
+  },
+  {
+    id: 'validTo',
+    label: 'Active to',
     minWidth: 100,
     align: 'center',
   },
@@ -52,7 +58,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [activeDialog, setActiveDialog] = React.useState({ type: false });
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [data, setData] = useState({ count: 0, rows: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = React.useState(false);

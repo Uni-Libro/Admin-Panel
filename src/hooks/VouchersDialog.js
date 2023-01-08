@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
-import { Form, Input, Modal, DatePicker, InputNumber } from 'antd';
+import { Form, Input, Modal, DatePicker } from 'antd';
 export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
   const [form] = Form.useForm();
   useEffect(() => {
     form.setFieldsValue({
-      id: (data && data.id) || '',
       code: (data && data.code) || '',
-      aDate: (data && data.aDate) || '',
-      eDate: (data && data.eDate) || '',
+      validFrom: (data && data.validFrom) || '',
+      validTo: (data && data.validTo) || '',
+      upTo: (data && data.upTo) || '',
       discount: (data && data.discount) || '',
     });
   }, [data]);
-  const onChange = (value) => {
-    console.log('changed', value);
-  };
   return (
     <Modal
       open={open}
@@ -39,25 +36,13 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
         name="form_in_modal"
         initialValues={{
           modifier: 'public',
-          id: data && data.id,
           code: data && data.code,
-          aDate: data && data.aDate,
-          eDate: data && data.eDate,
+          validFrom: data && data.validFrom,
+          validTo: data && data.validTo,
+          upTo: data && data.upTo,
           discount: data && data.discount,
         }}
       >
-        <Form.Item
-          name="id"
-          label="ID"
-          rules={[
-            {
-              required: true,
-              message: 'Please input the voucher ID!',
-            },
-          ]}
-        >
-          <Input dir="rtl" />
-        </Form.Item>
         <Form.Item name="code" label="Code" rules={[
           {
             required: true,
@@ -66,18 +51,18 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
         ]}>
           <Input dir="rtl" />
         </Form.Item>
-        <Form.Item name="aDate" label="Activation date" rules={[
+        <Form.Item name="validFrom" label="Activation date" rules={[
           {
             required: true,
-            message: 'Please input the categories!',
+            message: 'Please input the activation date!',
           },
         ]}>
           <DatePicker />
         </Form.Item>
-        <Form.Item name="eDate" label="Expiration date" rules={[
+        <Form.Item name="validTo" label="Expiration date" rules={[
           {
             required: true,
-            message: 'Please input the categories!',
+            message: 'Please input the expiration date!',
           },
         ]}>
           <DatePicker />
@@ -88,13 +73,15 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
             message: 'Please input the discount percentage!',
           },
         ]}>
-          <InputNumber
-            defaultValue={20}
-            min={0}
-            max={100}
-            formatter={(value) => `${value}%`}
-            parser={(value) => value.replace('%', '')}
-            onChange={onChange} />
+          <Input dir="rtl" />
+        </Form.Item>
+        <Form.Item name="upTo" label="Up to" rules={[
+          {
+            required: true,
+            message: 'Please input the maximum discount amount!',
+          },
+        ]}>
+          <Input dir="rtl" />
         </Form.Item>
       </Form>
     </Modal>

@@ -21,7 +21,7 @@ import {
 } from './service/users';
 const columns = [
   { id: 'id', label: 'User Id', minWidth: 50, align: 'center' },
-  { id: 'name', label: 'Username', minWidth: 100, align: 'center' },
+  { id: 'phone', label: 'Username', minWidth: 100, align: 'center' },
   { id: 'date', label: 'Join date', minWidth: 100, align: 'center' },
 ];
 

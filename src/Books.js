@@ -21,48 +21,20 @@ import { createBook, deleteBook, getBooks, updateBook } from './service/books';
 const columns = [
   { id: 'id', label: 'Book Id', minWidth: 80, align: 'center' },
   { id: 'name', label: 'Book name', minWidth: 80, align: 'center' },
-  { id: 'authorsId', label: 'Authors ID', minWidth: 80, align: 'center' },
+  { id: 'imageUrl', label: 'Image URL', minWidth: 80, align: 'center' },
   {
-    id: 'categoriesId',
+    id: 'CategoryBook',
     label: 'Categories ID',
     minWidth: 100,
     align: 'center',
   },
   {
-    id: 'pictureUrl',
-    label: 'Book picture URL',
-    minWidth: 120,
-    align: 'center',
-  },
-  {
-    id: 'pdfUrl',
-    label: 'Book PDF URL',
+    id: 'AuthorBook',
+    label: 'Authors ID',
     minWidth: 120,
     align: 'center',
   },
 ];
-
-// function createData(name, authorsId, categoriesId, pictureUrl, pdfUrl) {
-//   return { name, authorsId, categoriesId, pictureUrl, pdfUrl };
-// }
-
-// const rows = [
-//   createData(1, ["salam,", "hello"], ['Printing your dreams', 'da'], 3, 4,),
-//   createData(2, ['HarperCollins'], ['You write, we publish', 'gfd'], 5, 5,),
-//   createData(3, ['Simon & Schuster'], ['Presenting your thoughts to the world'], 6, 5,),
-//   createData(4, ['Hachette Book Group'], ['Quality printing'], 7, 5,),
-//   createData(5, ['Macmillan'], ['Get your dreams inked'], 8, 5,),
-//   createData(6, ['Scholastic'], ['Fast and reliable'], 9, 5,),
-//   createData(7, ['Disney Publishing Worldwide'], ['Experts in the field'], 10, 5,),
-//   createData(8, ['Houghton Mifflin Harcourt'], ['One-stop for printing solutions'], 11, 5,),
-//   createData(9, ['	Workman'], ['To make sales easier'], 12, 5,),
-//   createData(10, ['Sterling'], ['Printing your needs'], 13, 5,),
-//   createData(11, ['John Wiley and Sons'], ['Publishing better'], 14, 5,),
-//   createData(12, ['Abrams'], ['Motivating Community'], 15, 5,),
-//   createData(13, ['Dover'], ['A new Words for all'], 16, 5,),
-//   createData(14, ['Candlewick'], ['Printing is our Language'], 17, 5,),
-//   createData(15, ['W.W. Norton'], ['Writing for your Success'], 18, 5,),
-// ];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -70,13 +42,14 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
+  const [activeDialog, setActiveDialog] = React.useState({ type: false });
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const matches = useMediaQuery('(min-width:1045px)');
   const [data, setData] = useState({ count: 0, rows: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
-  const [activeDialog, setActiveDialog] = React.useState({ type: false });
   const [error, setError] = React.useState(false);
+
+  const matches = useMediaQuery('(min-width:750px)');
   const onCreate = async (values) => {
     const finalDatas = {
       description: "",

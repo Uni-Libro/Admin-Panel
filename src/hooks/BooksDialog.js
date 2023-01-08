@@ -7,11 +7,9 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
   useEffect(() => {
     form.setFieldsValue({
       name: (data && data.name) || '',
-      authorId: data && data.authorId,
-      authorsId: data && data.authorsId,
-      categorieId: data && data.categorieId,
-      categoriesId: data && data.categoriesId,
-      description: (data && data.description) || '',
+      imageUrl: data && data.imageUrl,
+      CategoryModelId: data && data.CategoryBook.CategoryModelId,
+      AuthorModelId: data && data.AuthorBook.AuthorModelId,
     });
   }, [data]);
   return (
@@ -37,11 +35,9 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
         layout="vertical" name="dynamic_form_nest_item" initialValues={{
           modifier: 'public',
           name: data && data.name,
-          authorId: data && data.authorId,
-          authorsId: data && data.authorsId,
-          categorieId: data && data.categorieId,
-          categoriesId: data && data.categoriesId,
-          description: data && data.description,
+          imageUrl: data && data.imageUrl,
+          CategoryModelId: data && data.CategoryBook.CategoryModelId,
+          AuthorModelId: data && data.AuthorBook.AuthorModelId,
         }}>
         <Form.Item
           name="name"
@@ -55,15 +51,15 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
         >
           <Input placeholder='Name' dir="rtl" />
         </Form.Item>
-        <Form.Item name="authorId" label="Author ID" rules={[
+        <Form.Item name="AuthorModelId" label="Author ID" rules={[
           {
             required: true,
-            message: 'Please input the authors id!',
+            message: 'Please input the author id!',
           },
         ]}>
           <Input placeholder='Author ID' />
         </Form.Item>
-        <Form.List name="authorsId">
+        <Form.List name="AuthorBook">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...Field }) => (
@@ -78,7 +74,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
                 >
                   <Form.Item
                     {...Field}
-                    name={[name, 'authorId']}
+                    name={[name, 'AuthorModelId']}
                     rules={[
                       {
                         required: true,
@@ -99,15 +95,15 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
             </>
           )}
         </Form.List>
-        <Form.Item name="categorieId" label="Category ID" rules={[
+        <Form.Item name="CategoryModelId" label="Category ID" rules={[
           {
             required: true,
-            message: 'Please input the categories!',
+            message: 'Please input the category!',
           },
         ]}>
           <Input placeholder='Category ID' />
         </Form.Item>
-        <Form.List name="categoriesId">
+        <Form.List name="CategoryBook">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...Field }) => (
@@ -122,7 +118,7 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
                 >
                   <Form.Item
                     {...Field}
-                    name={[name, 'categoryId']}
+                    name={[name, 'CategoryModelId']}
                     rules={[
                       {
                         required: true,
@@ -143,22 +139,13 @@ export function CollectionCreateForm({ open, onCreate, onCancel, data }) {
             </>
           )}
         </Form.List>
-        <Form.Item name="pictureUrl" label="Book picture URL" rules={[
+        <Form.Item name="imageUrl" label="Book image URL" rules={[
           {
             required: true,
             message: 'Please input the url!',
           },
         ]}>
           <Input placeholder='URL' dir="rtl" />
-        </Form.Item>
-        <Form.Item name="pdfUrl" label="Book PDF URL" rules={[
-          {
-            required: true,
-            message: 'Please input the url!',
-          },
-        ]}>
-          <Input placeholder='URL' dir="rtl" />
-          <Input.TextArea placeholder="description" dir="rtl" rows={4} />
         </Form.Item>
       </Form>
     </Modal>
